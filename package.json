@@ -1,0 +1,6 @@
+{
+  "description": "",
+  "dependencies": {
+    "docsify": "^4.13.1"
+  }
+}
