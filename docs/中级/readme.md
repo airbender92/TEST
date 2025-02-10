@@ -368,12 +368,448 @@ console.log(genericRole.role);
 
 <details>
     <summary>demon</summary>
+
+    我将为您详细梳理 Vue 技术栈的核心知识点，并提供 Vue2 和 Vue3 的对比示例代码。以下是结构化内容：
+
+---
+
+### 一、响应式原理对比
+**Vue2（Object.defineProperty）**
+```javascript
+// 数据劫持实现
+function observe(obj) {
+  if (!obj || typeof obj !== 'object') return
+  Object.keys(obj).forEach(key => {
+    let value = obj[key]
+    Object.defineProperty(obj, key, {
+      get() {
+        console.log(`读取 ${key}: ${value}`)
+        return value
+      },
+      set(newVal) {
+        console.log(`设置 ${key}: ${newVal}`)
+        value = newVal
+      }
+    })
+  })
+}
+```
+
+**Vue3（Proxy）**
+```javascript
+// 代理实现
+function reactive(obj) {
+  return new Proxy(obj, {
+    get(target, key, receiver) {
+      console.log(`读取 ${key}`)
+      return Reflect.get(target, key, receiver)
+    },
+    set(target, key, value, receiver) {
+      console.log(`设置 ${key}: ${value}`)
+      return Reflect.set(target, key, value, receiver)
+    }
+  })
+}
+```
+
+---
+
+### 二、响应式数据创建
+**Vue2 示例**
+```javascript
+export default {
+  data() {
+    return {
+      count: 0,
+      user: {
+        name: 'Alice'
+      }
+    }
+  },
+  methods: {
+    increment() {
+      this.count++
+    }
+  }
+}
+```
+
+**Vue3 示例**
+```javascript
+import { ref, reactive } from 'vue'
+
+export default {
+  setup() {
+    const count = ref(0)
+    const user = reactive({ name: 'Bob' })
+    
+    const increment = () => {
+      count.value++
+    }
+
+    return { count, user, increment }
+  }
+}
+```
+
+---
+
+### 三、组件通信示例
+**父子组件通信（Props + Events）**
+```vue
+<!-- Parent.vue -->
+<template>
+  <Child :msg="message" @update="handleUpdate"/>
+</template>
+
+<script>
+export default {
+  data() {
+    return { message: 'Hello' }
+  },
+  methods: {
+    handleUpdate(newMsg) {
+      this.message = newMsg
+    }
+  }
+}
+</script>
+
+<!-- Child.vue -->
+<script>
+export default {
+  props: {
+    msg: {
+      type: String,
+      required: true
+    }
+  },
+  methods: {
+    sendMessage() {
+      this.$emit('update', 'New message')
+    }
+  }
+}
+</script>
+```
+
+---
+
+### 四、Vue Router 核心配置
+**路由懒加载示例**
+```javascript
+// Vue3 路由配置
+import { createRouter, createWebHistory } from 'vue-router'
+
+const routes = [
+  {
+    path: '/dashboard',
+    component: () => import('./views/Dashboard.vue'), // 懒加载
+    meta: { requiresAuth: true }
+  }
+]
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes
+})
+
+// 全局导航守卫
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth && !isAuthenticated()) {
+    next('/login')
+  } else {
+    next()
+  }
+})
+```
+
+---
+
+### 五、Vuex 状态管理
+**模块化 Store 示例**
+```javascript
+// store/modules/user.js
+const state = { username: '' }
+const mutations = {
+  SET_USERNAME(state, name) {
+    state.username = name
+  }
+}
+const actions = {
+  fetchUser({ commit }) {
+    // API调用...
+  }
+}
+
+export default {
+  namespaced: true,
+  state,
+  mutations,
+  actions
+}
+
+// 主 store
+import { createStore } from 'vuex'
+import userModule from './modules/user'
+
+export default createStore({
+  modules: {
+    user: userModule
+  }
+})
+```
+
+---
+
+### 六、性能优化实践
+**列表渲染优化**
+```vue
+<template>
+  <div v-for="item in items" :key="item.id">
+    {{ item.content }}
+  </div>
+</template>
+
+<!-- 异步组件示例 -->
+<script>
+const AsyncComponent = () => ({
+  component: import('./HeavyComponent.vue'),
+  loading: LoadingComponent,
+  error: ErrorComponent,
+  delay: 200,
+  timeout: 3000
+})
+
+export default {
+  components: { AsyncComponent }
+}
+</script>
+```
+
+---
+
+### 七、完整项目 Demo 结构
+**Vue3 项目结构**
+```
+├── public
+├── src
+│   ├── assets
+│   ├── components
+│   │   └── BaseButton.vue
+│   ├── router
+│   │   └── index.js
+│   ├── store
+│   │   ├── modules
+│   │   └── index.js
+│   ├── views
+│   │   └── HomeView.vue
+│   ├── App.vue
+│   └── main.js
+├── package.json
+└── vite.config.js
+```
+
+**Vue2 项目启动**
+```bash
+vue create my-project
+# 选择 Vue2 模板
+```
+
+**Vue3 项目启动**
+```bash
+npm init vue@latest
+# 选择需要的配置项
+```
+
+---
+
+### 关键差异总结表
+| 特性                | Vue2                  | Vue3                  |
+|---------------------|-----------------------|-----------------------|
+| 响应式系统          | Object.defineProperty | Proxy                 |
+| API 风格            | Options API           | Composition API       |
+| 生命周期            | beforeCreate/created  | setup()               |
+| Fragment 支持       | 不支持                | 支持多根节点          |
+| 打包体积            | 较大                  | 更小（Tree-shaking）  |
+| TypeScript 支持     | 需要插件              | 原生支持              |
+
+---
+
+通过以上对比和示例代码，可以清晰看到 Vue2 和 Vue3 的核心差异及最佳实践。建议在实际项目中根据团队技术栈和项目需求选择合适的版本（Vue3 推荐用于新项目）。对于需要兼容旧浏览器的项目，Vue2 仍然是可靠选择。
 </details>
 
 ## 熟悉 CSS 预处理器（Less、Sass），能运用其特性进行高效的样式编写与维护，理解 CSS3 新特性并灵活运用在动画、渐变、弹性布局等场景。
 
 <details>
     <summary>demon</summary>
+
+    ### 知识点总结
+
+#### 1. CSS 预处理器（Less、Sass）
+- **变量**：可以定义一个值，然后在样式中重复使用，方便统一管理和修改样式中的颜色、字体大小等。
+- **嵌套规则**：允许在选择器中嵌套其他选择器，使代码结构更清晰，与 HTML 结构对应，提高可读性。
+- **混合（Mixin）**：可以将一组样式封装成一个可复用的代码块，通过调用这个代码块来重复使用样式，避免代码重复。
+- **函数**：提供了一些内置函数，如颜色处理、数学计算等，方便进行样式的动态计算和处理。
+
+#### 2. CSS3 新特性
+- **动画**：使用 `@keyframes` 定义动画关键帧，结合 `animation` 属性为元素添加动画效果，可实现元素的移动、旋转、缩放等动态效果。
+- **渐变**：包括线性渐变（`linear-gradient`）和径向渐变（`radial-gradient`），可以创建平滑的颜色过渡效果，用于背景、边框等。
+- **弹性布局（Flexbox）**：是一种一维布局模型，提供了强大的对齐和分布子元素的能力，使元素在容器内的布局更加灵活和可控。
+
+### 完整 Demo
+
+#### 1. Sass 示例
+
+首先，确保你已经安装了 Sass。可以使用以下命令安装：
+```bash
+npm install -g sass
+```
+
+创建一个 `styles.scss` 文件：
+```scss
+// 变量
+$primary-color: #007bff;
+$font-size-base: 16px;
+
+// 混合
+@mixin border-radius($radius) {
+  -webkit-border-radius: $radius;
+  -moz-border-radius: $radius;
+  border-radius: $radius;
+}
+
+// 嵌套规则
+nav {
+  ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: space-around;
+
+    li {
+      a {
+        color: $primary-color;
+        font-size: $font-size-base;
+        text-decoration: none;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}
+
+// 使用混合
+.button {
+  @include border-radius(5px);
+  background-color: $primary-color;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+}
+```
+
+使用以下命令将 `styles.scss` 编译为 `styles.css`：
+```bash
+sass styles.scss styles.css
+```
+
+创建一个 HTML 文件 `index.html` 并引入编译后的 CSS 文件：
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Sass Demo</title>
+</head>
+
+<body>
+  <nav>
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Contact</a></li>
+    </ul>
+  </nav>
+  <button class="button">Click me</button>
+</body>
+
+</html>
+```
+
+#### 2. CSS3 新特性示例
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CSS3 Demo</title>
+  <style>
+    /* 渐变背景 */
+    body {
+      background: linear-gradient(to bottom, #007bff, #00ffcc);
+    }
+
+    /* 弹性布局 */
+    .flex-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 300px;
+    }
+
+    .flex-item {
+      background-color: white;
+      padding: 20px;
+      margin: 10px;
+    }
+
+    /* 动画效果 */
+    .animated-box {
+      width: 100px;
+      height: 100px;
+      background-color: #ff6347;
+      position: relative;
+      animation: move 3s infinite;
+    }
+
+    @keyframes move {
+      0% {
+        left: 0;
+      }
+      50% {
+        left: 200px;
+      }
+      100% {
+        left: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="flex-container">
+    <div class="flex-item">Item 1</div>
+    <div class="flex-item">Item 2</div>
+    <div class="flex-item">Item 3</div>
+  </div>
+  <div class="animated-box"></div>
+</body>
+
+</html>
+```
+
+### 总结
+通过以上示例，你可以看到如何使用 Sass 的变量、嵌套规则和混合来高效地编写和维护 CSS 样式，以及如何运用 CSS3 的渐变、弹性布局和动画特性为网页添加丰富的视觉效果。这些技术可以大大提高开发效率和网页的用户体验。 
 </details>
 
 ## 掌握 Ajax 和 Axios 进行数据交互，熟悉前后端数据传输流程，能够处理请求与响应中的各种情况，如错误处理、异步加载等。
