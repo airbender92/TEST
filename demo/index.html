@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complex Interactive web page</title>
+    <!-- 引入编译后的css文件 -->
+     <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>My Complex web page</h1>
+        <nav>
+            <ul>
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Content</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <article>
+            <h2>Article Title</h2>
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Adipisci nemo harum reprehenderit maxime qui! Hic accusamus inventore voluptatem, assumenda consequuntur sed, id ex et fugit temporibus numquam atque, adipisci harum.</p>
+        </article>
+
+        <form action="" id="myForm">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required placeholder="Enter your email">
+            <br>
+            <label for="tel">Phone Number:</label>
+            <input type="tel" id="tel" name="tel" pattern="[0-9]{10}" placeholder="Enter your phone number">
+            <br>
+            <label for="message">Message:</label>
+            <textarea name="message" id="message" required placeholder="Enter your message"></textarea>
+            <br>
+            <label for="country">Country:</label>
+            <select name="country" id="country">
+                <option value="USA">USA</option>
+                <option value="Canada">Canada</option>
+                <option value="UK">UK</option>
+            </select>
+            <input type="submit" value="Submit">
+        </form>
+
+        <video id="myVideo" width="640" height="360" controls>
+            <!-- 处理不同格式的兼容性问题 -->
+             <source src="video.mp4" type="video/mp4">
+             <source src="video.webm" type="video/webm">
+             Your browser does not support the video tag.
+        </video>
+
+        <!-- iframe -->
+         <iframe id="myIframe" src="https://www.example.com" width="640" height="360" sandbox></iframe>
+
+         <footer>
+            <p>&copy; 2025 My Complex web page.</p>
+         </footer>
+    </main>
+
+      <!-- 选择器优先级示例 -->
+      <div id="main-content">
+        <div class="article">
+            <p>This paragraph should have the primary color defined in SCSS.</p>
+        </div>
+    </div>
+    <!-- 盒模型示例 -->
+    <div class="box">This is a standard box model.</div>
+    <div class="box border-box">This is a border-box model.</div>
+    <!-- 浮动和清除浮动示例 -->
+    <div class="float-container">
+        <div class="float-left">Left floating element</div>
+        <div class="float-right">Right floating element</div>
+    </div>
+    <!-- CSS3 动画和过渡效果示例 -->
+    <div class="animated-box"></div>
+    <!-- 弹性布局示例 -->
+    <div class="flex-container">
+        <div class="flex-item">Flex Item 1</div>
+        <div class="flex-item">Flex Item 2</div>
+        <div class="flex-item">Flex Item 3</div>
+    </div>
+    <!-- 网格布局示例 -->
+    <div class="grid-container">
+        <div class="grid-item">Grid Item 1</div>
+        <div class="grid-item">Grid Item 2</div>
+        <div class="grid-item">Grid Item 3</div>
+        <div class="grid-item">Grid Item 4</div>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>

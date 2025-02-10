@@ -1,0 +1,105 @@
+// 变量
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+
+// 混合
+@mixin border-radius($radius) {
+    -webkit-border-radius: $radius;
+    -moz-border-radius: $radius;
+    border-radius: $radius;
+}
+
+// 选择器优先级示例
+#main-content .article p {
+    color: $primary-color;
+}
+
+// 盒模型示例
+.box{
+    // 标准盒模型
+    box-sizing: content-box;
+    width: 200px;
+    padding: 20px;
+    border: 1px solid $secondary-color;
+    margin: 20px;
+}
+
+.box.border-box{
+    // 怪异盒模型
+    box-sizing: border-box;
+}
+
+// 浮动和清除浮动
+.float-container {
+    // 触发BFC, 防止父容器高度塌陷
+    overflow: hidden;
+}
+
+.float-left {
+    float: left;
+    width: 50%;
+    background-color: lightblue;
+}
+
+.float-right {
+    float: right;
+    width: 50%;
+    background-color: lightgreen;
+}
+
+// CSS3动画和过渡效果
+.animated-box {
+    width: 100px;
+    height: 100px;
+    background-color: $primary-color;
+    // 过渡效果
+    transition: all 1s;
+    // 动画效果
+    animation: rotate 2s infinite;
+}
+
+.animated-box:hover{
+    transform: scale(1.2);
+}
+
+@keyframes rotate {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// 弹性布局fexbox
+.flex-container {
+    display: flex;
+    // 主轴居中对齐
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: lightgray;
+}
+
+.flex-item{
+    width: 100px;
+    height: 100px;
+    background-color: orange;
+    margin: 10px;
+}
+
+// 网格布局grid
+.grid-container {
+    display: grid;
+    // 响应式布局
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 10px;
+    background-color: lightgray;
+}
+
+.grid-item {
+    background-color: purple;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
