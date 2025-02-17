@@ -13,4 +13,18 @@ app.use(router)
 
 app.component('MyGlobalComponent', MyGlobalComponent)
 
+app.directive('highlight', {
+    mounted(el, binding) {
+        const styleProperty = binding.arg || 'backgroundColor';
+        // 支持修饰符
+        // binding.arg：获取指令的参数，例如 v-highlight:color 中的 color。
+        // binding.modifiers：获取指令的修饰符，例如 v-highlight.light 中的 light
+        if(binding.modifiers.light) {
+            el.style[styleProperty] = `light${binding.value}`;
+        } else {
+            el.style[styleProperty] = binding.value;
+        }
+    }
+})
+
 app.mount('#app');

@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import About from '../views/About.vue';
 import Connection from '../views/Connection.vue';
+import Dash from '../views/Dash.vue';
 
 const routes = [
     {
@@ -19,6 +20,12 @@ const routes = [
         path: '/connection',
         name: 'Connection',
         component: Connection,
+        
+    },
+    {
+        path: '/dash',
+        name: 'Dash',
+        component: Dash,
         
     }
 ];

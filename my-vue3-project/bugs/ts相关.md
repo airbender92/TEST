@@ -437,4 +437,96 @@ my-project/
 
 ---
 
-## Q5: 
+## Q5: let timer: ReturnType<typeof setInterval>;
+
+在 TypeScript 中，`ReturnType<typeof setInterval>` 是一种获取 `setInterval` 函数返回类型的方式。`setInterval` 返回的是一个数字类型的定时器 ID（在浏览器环境中），或者是一个对象（在 Node.js 环境中）。
+
+### 解释
+- `typeof setInterval`：获取 `setInterval` 函数的类型。
+- `ReturnType<...>`：获取函数类型的返回值类型。
+
+### 示例代码
+```typescript
+let timer: ReturnType<typeof setInterval>;
+
+// 启动定时器
+timer = setInterval(() => {
+    console.log("Tick");
+}, 1000);
+
+// 清除定时器
+clearInterval(timer);
+```
+
+### 注意事项
+1. **浏览器环境**：`setInterval` 返回的是一个 `number` 类型的 ID。
+2. **Node.js 环境**：`setInterval` 返回的是一个 `Timeout` 对象（Node.js 特有的类型）。
+3. **类型安全**：使用 `ReturnType<typeof setInterval>` 可以确保代码在不同环境下的类型一致性。
+
+如果你有更多问题或需要进一步解释，请告诉我！
+
+---
+
+## QS: function useCounter<T extends number = number>(initialValue:T){}
+
+你定义了一个泛型函数 `useCounter`，它接受一个泛型参数 `T`，并约束 `T` 必须是一个 `number` 类型（或 `number` 的子类型）。`initialValue` 参数的类型被指定为 `T`。
+
+### 代码解析
+```typescript
+function useCounter<T extends number = number>(initialValue: T) {
+    // 函数体
+}
+```
+
+1. **泛型参数 `<T extends number>`**：
+   - `T` 是一个泛型类型参数。
+   - `extends number` 表示 `T` 必须是 `number` 类型或其子类型（例如，`1 | 2 | 3` 这样的字面量类型）。
+   - `= number` 表示如果调用时没有显式指定 `T`，则默认使用 `number` 类型。
+
+2. **参数 `initialValue: T`**：
+   - `initialValue` 的类型是 `T`，即传入的泛型类型。
+
+### 使用示例
+#### 示例 1：使用默认的 `number` 类型
+```typescript
+useCounter(10); // T 被推断为 number
+```
+
+#### 示例 2：显式指定泛型类型
+```typescript
+useCounter<42>(42); // T 被显式指定为 42（字面量类型）
+```
+
+#### 示例 3：使用字面量类型
+```typescript
+useCounter<1 | 2 | 3>(1); // T 被指定为 1 | 2 | 3
+```
+
+### 可能的实现
+假设你想实现一个计数器函数，可以这样写：
+```typescript
+function useCounter<T extends number = number>(initialValue: T) {
+    let count = initialValue;
+
+    return {
+        getCount: () => count,
+        increment: () => ++count,
+        decrement: () => --count,
+    };
+}
+
+const counter = useCounter(10);
+console.log(counter.getCount()); // 10
+counter.increment();
+console.log(counter.getCount()); // 11
+```
+
+### 注意事项
+1. **类型约束**：
+   - 由于 `T` 被约束为 `number`，你不能传递非数字类型的值，否则会报错。
+   - 例如：`useCounter("10")` 会导致 TypeScript 报错。
+
+2. **默认类型**：
+   - 如果没有显式指定 `T`，则 `T` 默认为 `number`。
+
+如果你有其他需求或需要进一步扩展这个函数的功能，请告诉我！
